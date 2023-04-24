@@ -44,10 +44,57 @@ namespace ComputationalGeometry
     /// </summary>
     public class MCH
     {
-        public void Graham()
-        {
+        /// <summary>
+        /// Количество точек в множестве.
+        /// </summary>
+        int N;
+        /// <summary>
+        /// Множество точек.
+        /// </summary>
+        List<Point> Points;
 
+        public MCH()
+        {
+            Points = new List<Point>();
+            N = 0;
         }
+        public MCH(List<Point> p)
+        {
+            Points = p;
+            N = Points.Count;
+        }
+        
+        public List<int> Graham()
+        {
+            int[] P = new int[N];//список номеров точек
+            for(int i = 0; i<N; ++i)
+            {
+                P[i] = i;
+            }
+            for (int i = 0; i < N; ++i)
+                if (Points[P[i]].X < Points[P[0]].X) //если P[i]-ая точка лежит левее P[0]-ой точки
+                    Swap(P[i], P[0]); //меняем местами номера этих точек 
+            for (int i = 2; i < N; ++i) //сортировка вставкой
+            { 
+                int j = i;
+                while (j > 1 && (Rotate(Points[P[0]], Points[P[j - 1]], Points[P[j]]) < 0))//разобраться с возвратом Rotate
+                {
+                    Swap(P[j], P[j - 1]);
+                    j -= 1;
+                }
+            }
+            List<int> S = new List<int>();//создаем стек
+            S.Add(P[0]);
+            S.Add(P[1]);
+            for (int i = 2; i < N; ++i)
+            {
+                while (Rotate(Points[S[-2]], Points[S[-1]], Points[P[i]]) < 0)
+                    S.RemoveAt(S.Count-1); //pop(S)    //либо удалять с начала либо удалять с конца???????????????
+                S.Add(P[i]); //push(S,P[i])
+            }
+            return S;
+        }
+
         /// <summary>
         /// Вспомогательная задача для реализации левого правого поворотов.
         /// </summary>
@@ -55,7 +102,7 @@ namespace ComputationalGeometry
         /// <param name="B">Конец отрезка, относительно которого будем определять положение точки.</param>
         /// <param name="C">Точка, для которой определяется положение относительно отрезка AB.</param>
         /// <returns>Направление исходного поворота, если 1, то поворолт правый, если -1, то левый, если 0, то точки лежат на одной прямой.</returns>
-        public int Rotate(Point A, Point B, Point C)
+        private int Rotate(Point A, Point B, Point C)
         {
             double rotation = (B.X - A.X) * (C.Y - B.Y) - (B.Y - A.Y) * (C.X - B.X);
             if (rotation > 0)
@@ -63,6 +110,13 @@ namespace ComputationalGeometry
             if (rotation < 0)
                 return -1;
             return 0;
+        }
+    
+        private void Swap(int a, int b)
+        {
+            int temp = a;
+            a = b;
+            b = temp;
         }
     }
 }
