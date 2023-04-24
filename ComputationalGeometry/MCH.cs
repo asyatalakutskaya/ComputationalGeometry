@@ -37,6 +37,10 @@ namespace ComputationalGeometry
             X = x;
             Y = y;
         }
+        public override string ToString()
+        {
+            return $"({X};{Y})";
+        }
     }
 
     /// <summary>
@@ -111,7 +115,12 @@ namespace ComputationalGeometry
                 return -1;
             return 0;
         }
-    
+        
+        /// <summary>
+        /// Обмен элементов местами.
+        /// </summary>
+        /// <param name="a"></param>
+        /// <param name="b"></param>
         private void Swap(int a, int b)
         {
             int temp = a;
