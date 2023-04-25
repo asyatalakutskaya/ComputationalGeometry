@@ -23,7 +23,7 @@ namespace CGTest
             };
             
             MCH mCH = new MCH(list);
-            List<int> res = mCH.Graham();
+            List<int> res = mCH.Jarvismarch();
             foreach(int el in res)
             {
                 Console.WriteLine(list[el]);

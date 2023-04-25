@@ -92,11 +92,41 @@ namespace ComputationalGeometry
             S.Add(P[1]);
             for (int i = 2; i < N; ++i)
             {
-                while (Rotate(Points[S[-2]], Points[S[-1]], Points[P[i]]) < 0)
+                while (Rotate(Points[S[S.Count-2]], Points[S[S.Count - 1]], Points[P[i]]) < 0)
                     S.RemoveAt(S.Count-1); //pop(S)    //либо удалять с начала либо удалять с конца???????????????
                 S.Add(P[i]); //push(S,P[i])
             }
             return S;
+        }
+
+        public List<int> Jarvismarch()
+        {
+            List<int> P = new List<int>();//список номеров точек
+            for (int i = 0; i < N; ++i)
+            {
+                P.Add(i);
+            }
+            for (int i = 1; i < N; ++i)
+                if (Points[P[i]].X < Points[P[0]].X)
+                    Swap(P[i], P[0]);  //swap
+            List<int> H = new List<int>() { P[0] };
+            P.RemoveAt(0);//удаляем элеменнт из начала и сохраняем его в конце
+            P.Add(H[0]);
+            while (true)
+            {
+                int right = 0;
+                for (int i = 1; i < P.Count; ++i)
+                    if (Rotate(Points[H[H.Count - 1]], Points[P[right]], Points[P[i]]) < 0)
+                        right = i;
+                if (P[right] == H[0])
+                    break;
+                else
+                {
+                    H.Add(P[right]);
+                    P.RemoveAt(right);
+                }
+            }
+            return H;
         }
 
         /// <summary>
