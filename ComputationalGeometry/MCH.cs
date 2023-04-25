@@ -44,18 +44,22 @@ namespace ComputationalGeometry
     }
 
     /// <summary>
-    /// Класс, реализующий алгоритмы построения минимально выпуклых оболочек.
+    /// Класс, реализующий алгоритмы построения минимальных выпуклых оболочек.
     /// </summary>
     public class MCH
     {
         /// <summary>
         /// Количество точек в множестве.
         /// </summary>
-        int N;
+        private int N;
         /// <summary>
         /// Множество точек.
         /// </summary>
-        List<Point> Points;
+        private List<Point> Points;
+        /// <summary>
+        /// Минимальная выпуклая оболочка.
+        /// </summary>
+        public List<int> minCH { get; private set; }
 
         public MCH()
         {
@@ -69,8 +73,11 @@ namespace ComputationalGeometry
         }
 
         //НЕ РАБОТАЕТ ИЗ-ЗА СОРТИРОВКИ ТОЧЕК!!!
-        public List<int> Graham()
+        public void Graham()
         {
+            //Нельзя построить минимальную выпуклую оболочку
+            if (N < 3)
+                return;
             List<int> P = new List<int>();//список номеров точек
             for (int i = 0; i < N; ++i)
                 P.Add(i);
@@ -89,132 +96,107 @@ namespace ComputationalGeometry
             }
             for (int i = 0; i < N; ++i)
                 Console.WriteLine(P[i]);
-            List<int> S = new List<int>() { P[0], P[1] };//создаем стек
+            List<int> minCH = new List<int>() { P[0], P[1] };//создаем стек
             for (int i = 2; i < N; ++i)
             {
-                while (Rotate(Points[S[S.Count-2]], Points[S[S.Count - 1]], Points[P[i]]) < 0)
-                    S.RemoveAt(S.Count-1); //pop(S)
+                while (Rotate(Points[minCH[minCH.Count-2]], Points[minCH[minCH.Count - 1]], Points[P[i]]) < 0)
+                    minCH.RemoveAt(minCH.Count-1); //pop(S)
                 
-                S.Add(P[i]); //push(S,P[i])
+                minCH.Add(P[i]); //push(S,P[i])
             }
-            return S;
         }
 
-        public List<int> Jarvismarch()
+        public void Jarvismarch()
         {
+            //Нельзя построить минимальную выпуклую оболочку
+            if (N < 3)
+                return;
             List<int> P = new List<int>();//список номеров точек
             for (int i = 0; i < N; ++i)
                 P.Add(i);
             for (int i = 1; i < N; ++i)
                 if (Points[P[i]].X < Points[P[0]].X)
                     Swap(P, P[i], P[0]);  //swap
-            List<int> H = new List<int>() { P[0] };
+            minCH = new List<int>() { P[0] };
             P.RemoveAt(0);//удаляем элеменнт из начала и сохраняем его в конце
-            P.Add(H[0]);
+            P.Add(minCH[0]);
             while (true)
             {
                 int right = 0;
                 for (int i = 1; i < P.Count; ++i)
-                    if (Rotate(Points[H[H.Count - 1]], Points[P[right]], Points[P[i]]) < 0)
+                    if (Rotate(Points[minCH[minCH.Count - 1]], Points[P[right]], Points[P[i]]) < 0)
                         right = i;
-                if (P[right] == H[0])
+                if (P[right] == minCH[0])
                     break;
                 else
                 {
-                    H.Add(P[right]);
+                    minCH.Add(P[right]);
                     P.RemoveAt(right);
                 }
             }
-            return H;
         }
 
-        public void printHull(List<List<int>> a)
+        public void printHull()
         {
-            // a[i].second -> y-coordinate of the ith point
+            //Нельзя построить минимальную выпуклую оболочку
             if (N < 3)
                 return;
-
-            // Finding the point with minimum and
-            // maximum x-coordinate
-            int min_x = 0;
-            int max_x = 0;
+            //Самая левая и самая правая точки
+            int leftPoint = 0, rightPoint = 0;
             for (int i = 1; i < N; i++)
             {
-                if (a[i][0] < a[min_x][0])
-                {
-                    min_x = i;
-                }
-                if (a[i][0] > a[max_x][0])
-                {
-                    max_x = i;
-                }
+                if (Points[i].X < Points[leftPoint].X)
+                    leftPoint = i;
+                if (Points[i].X > Points[rightPoint].X)
+                    rightPoint = i;
             }
-
+            minCH = new List<int>();
+            // Рекурсивный поиск чего-то там
             // Recursively find convex hull points on
             // one side of line joining a[min_x] and
             // a[max_x]
-            quickHull(a, a[min_x], a[max_x], 1);
-            quickHull(a, a[min_x], a[max_x], -1);
+            quickHull(Points[leftPoint], Points[rightPoint], 1);
+            quickHull(Points[leftPoint], Points[rightPoint], -1);
 
-            Console.Write("The points in Convex Hull are:\n");
-            foreach (var item in hull)
-            {
-                Console.WriteLine(item[0] + " " + item[1]);
-            }
+            
         }
 
-        public void quickHull(List<List<int>> a,
-                                 List<int> p1, List<int> p2,
-                                 int side)
+        private void quickHull(Point p1, Point p2, int side)
         {
             int ind = -1;
-            int max_dist = 0;
-
-            // finding the point with maximum distance
-            // from L and also on the specified side of L.
+            double max_dist = 0;
+            //Нахождение точки, максимально удаленной от прямой,
+            //а также на указанной стороне относительно прямой.
             for (int i = 0; i < N; i++)
             {
-                int temp = Rotate(p1, p2, a[i]);
-                if (findSide(p1, p2, a[i]) == side
-                    && temp > max_dist)
+                double temp = lineDist(p1, p2, Points[i]);
+                if (Rotate(p1, p2, Points[i]) == side && temp > max_dist)
                 {
                     ind = i;
                     max_dist = temp;
                 }
             }
-
-            // If no point is found, add the end points
-            // of L to the convex hull.
+            //Если точка не найдена, то добавляем конечные точки L к выпуклой оболочке.
             if (ind == -1)
             {
-                hull.Add(p1);
-                hull.Add(p2);
+                minCH.Add(Points.IndexOf(p2));
                 return;
             }
-
             // Recur for the two parts divided by a[ind]
-            quickHull(a, a[ind], p1,
-                      -findSide(a[ind], p1, p2));
-            quickHull(a, a[ind], p2,
-                      -findSide(a[ind], p2, p1));
+            quickHull(Points[ind], p1, -Rotate(Points[ind], p1, p2));
+            quickHull(Points[ind], p2, -Rotate(Points[ind], p2, p1));
         }
 
-        // Returns the side of point p with respect to line
-        // joining points p1 and p2.
-        public static int findSide(List<int> p1, List<int> p2, List<int> p)
+        /// <summary>
+        /// Расстояние от точки до прямой.
+        /// </summary>
+        /// <param name="p1"></param>
+        /// <param name="p2"></param>
+        /// <param name="p"></param>
+        /// <returns></returns>
+        private double lineDist(Point p1, Point p2, Point p)
         {
-            int val = (p[1] - p1[1]) * (p2[0] - p1[0])
-                      - (p2[1] - p1[1]) * (p[0] - p1[0]);
-
-            if (val > 0)
-            {
-                return 1;
-            }
-            if (val < 0)
-            {
-                return -1;
-            }
-            return 0;
+            return Math.Abs((p.Y - p1.Y) * (p2.X - p1.X) - (p2.Y - p1.Y) * (p.X - p1.X));
         }
 
         /// <summary>
@@ -224,9 +206,14 @@ namespace ComputationalGeometry
         /// <param name="B">Конец отрезка, относительно которого будем определять положение точки.</param>
         /// <param name="C">Точка, для которой определяется положение относительно отрезка AB.</param>
         /// <returns>Направление исходного поворота, если 1, то поворолт правый, если -1, то левый, если 0, то точки лежат на одной прямой.</returns>
-        private double Rotate(Point A, Point B, Point C)
+        private int Rotate(Point A, Point B, Point C)
         {
-            return (B.X - A.X) * (C.Y - B.Y) - (B.Y - A.Y) * (C.X - B.X);
+            double rotate = (B.X - A.X) * (C.Y - B.Y) - (B.Y - A.Y) * (C.X - B.X);
+            if (rotate < 0)
+                return - 1;
+            if (rotate > 0)
+                return 1;
+            return 0;
         }
 
         /// <summary>
@@ -239,6 +226,17 @@ namespace ComputationalGeometry
             int temp = list[a];
             list[a] = list[b];
             list[b] = temp;
+        }
+
+        /// <summary>
+        /// Вывод минимальной выпуклой оболочки.
+        /// </summary>
+        public void Print()
+        {
+            Console.WriteLine("Минимально выпуклая оболочка:");
+            for(int i =0; i<minCH.Count; ++i)
+                Console.Write(Points[minCH[i]] + " ");
+            Console.WriteLine();
         }
     }
 }

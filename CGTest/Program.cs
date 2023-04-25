@@ -21,14 +21,10 @@ namespace CGTest
                 new Point(2,6),
                 new Point(6,7)
             };
-            //Создать поле для оболочки
-            ///ДОБАВИТИЬ ПРОВЕРКУ НА НЕ МЕНЕЕ 3 ТОЧЕК!!!!!!!!!!
+            //Поправить вывод, чтобы не по рёбрам
             MCH mCH = new MCH(list);
-            List<int> res = mCH.Graham();
-            foreach(int el in res)
-            {
-                Console.WriteLine(list[el]);
-            }
+            mCH.printHull();
+            mCH.Print();
         }
     }
 }
