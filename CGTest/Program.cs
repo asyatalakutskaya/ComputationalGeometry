@@ -23,7 +23,7 @@ namespace CGTest
             };
             //Поправить вывод, чтобы не по рёбрам
             MCH mCH = new MCH(list);
-            mCH.printHull();
+            mCH.Graham();
             mCH.Print();
         }
     }

@@ -27,6 +27,11 @@ namespace ComputationalGeometry
             X = 0;
             Y = 0;
         }
+        public Point(Point p)
+        {
+            X = p.X;
+            Y = p.Y;
+        }
         /// <summary>
         /// Инициализирует новый экземпляр класса Point.
         /// </summary>
@@ -72,7 +77,9 @@ namespace ComputationalGeometry
             N = Points.Count;
         }
 
-        //НЕ РАБОТАЕТ ИЗ-ЗА СОРТИРОВКИ ТОЧЕК!!!
+        /// <summary>
+        /// Алгоритм Грэхема.
+        /// </summary>
         public void Graham()
         {
             //Нельзя построить минимальную выпуклую оболочку
@@ -81,31 +88,31 @@ namespace ComputationalGeometry
             List<int> P = new List<int>();//список номеров точек
             for (int i = 0; i < N; ++i)
                 P.Add(i);
-            //Выбор стартовой точки(самая левая) и перестановка её нгомера в начало
+            //Выбор стартовой точки(самая левая) и перестановка её номера в начало
             for (int i = 1; i < N; ++i)
                 if (Points[P[i]].X < Points[P[0]].X) //если P[i]-ая точка лежит левее P[0]-ой точки
                     Swap(P, P[i], P[0]); //меняем местами номера этих точек 
-            for (int i = 2; i < N; ++i) //сортировка вставкой //НЕПРАВИЛЬНО!!!
-            { 
+            for (int i = 2; i < N; ++i) //сортировка вставкой
+            {
                 int j = i;
                 while (j > 1 && (Rotate(Points[P[0]], Points[P[j - 1]], Points[P[j]]) < 0))
                 {
-                    Swap(P, P[j], P[j - 1]);
+                    Swap(P, j, j - 1);
                     j -= 1;
                 }
             }
-            for (int i = 0; i < N; ++i)
-                Console.WriteLine(P[i]);
-            List<int> minCH = new List<int>() { P[0], P[1] };//создаем стек
+            minCH = new List<int>() { P[0], P[1] };//создаем стек
             for (int i = 2; i < N; ++i)
             {
-                while (Rotate(Points[minCH[minCH.Count-2]], Points[minCH[minCH.Count - 1]], Points[P[i]]) < 0)
-                    minCH.RemoveAt(minCH.Count-1); //pop(S)
-                
+                while (Rotate(Points[minCH[minCH.Count - 2]], Points[minCH[minCH.Count - 1]], Points[P[i]]) < 0)
+                    minCH.RemoveAt(minCH.Count - 1); //pop(S)
                 minCH.Add(P[i]); //push(S,P[i])
             }
         }
 
+        /// <summary>
+        /// Алгоритм Джарвиса.
+        /// </summary>
         public void Jarvismarch()
         {
             //Нельзя построить минимальную выпуклую оболочку
@@ -136,6 +143,9 @@ namespace ComputationalGeometry
             }
         }
 
+        /// <summary>
+        /// Алгоритм быстрой оболочки
+        /// </summary>
         public void printHull()
         {
             //Нельзя построить минимальную выпуклую оболочку
@@ -151,22 +161,16 @@ namespace ComputationalGeometry
                     rightPoint = i;
             }
             minCH = new List<int>();
-            // Рекурсивный поиск чего-то там
-            // Recursively find convex hull points on
-            // one side of line joining a[min_x] and
-            // a[max_x]
+            //Рекурсивный поиск крайних точек
             quickHull(Points[leftPoint], Points[rightPoint], 1);
-            quickHull(Points[leftPoint], Points[rightPoint], -1);
-
-            
+            quickHull(Points[leftPoint], Points[rightPoint], -1);            
         }
 
         private void quickHull(Point p1, Point p2, int side)
         {
             int ind = -1;
             double max_dist = 0;
-            //Нахождение точки, максимально удаленной от прямой,
-            //а также на указанной стороне относительно прямой.
+            //Нахождение точки, максимально удаленной от прямой, а также на указанной стороне относительно прямой.
             for (int i = 0; i < N; i++)
             {
                 double temp = lineDist(p1, p2, Points[i]);
@@ -179,7 +183,12 @@ namespace ComputationalGeometry
             //Если точка не найдена, то добавляем конечные точки L к выпуклой оболочке.
             if (ind == -1)
             {
-                minCH.Add(Points.IndexOf(p2));
+                int index1 = Points.IndexOf(p1);
+                if (!minCH.Contains(index1))
+                    minCH.Add(Points.IndexOf(p1));
+                int index2 = Points.IndexOf(p2);
+                if (!minCH.Contains(index2)) 
+                    minCH.Add(Points.IndexOf(p2));
                 return;
             }
             // Recur for the two parts divided by a[ind]
@@ -224,6 +233,18 @@ namespace ComputationalGeometry
         private void Swap(List<int> list, int a, int b)
         {
             int temp = list[a];
+            list[a] = list[b];
+            list[b] = temp;
+        }
+
+        /// <summary>
+        /// Обмен элементов местами.
+        /// </summary>
+        /// <param name="a"></param>
+        /// <param name="b"></param>
+        private void Swap(List<Point> list, int a, int b)
+        {
+            Point temp = new Point(list[a]);
             list[a] = list[b];
             list[b] = temp;
         }
