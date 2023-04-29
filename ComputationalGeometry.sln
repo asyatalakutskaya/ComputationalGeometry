@@ -5,7 +5,9 @@ VisualStudioVersion = 16.0.31702.278
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ComputationalGeometry", "ComputationalGeometry\ComputationalGeometry.csproj", "{3F1A138C-8D41-40ED-8E89-52AA6DF37AE4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CGTest", "CGTest\CGTest.csproj", "{DA76EF16-411C-4CE3-8D58-C9B1F09A3CD1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CGTest", "CGTest\CGTest.csproj", "{DA76EF16-411C-4CE3-8D58-C9B1F09A3CD1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MCH_Visual", "MCH_Vis\MCH_Visual.csproj", "{31FF8E74-BAA0-40C7-868A-B6FBC3D3C519}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{DA76EF16-411C-4CE3-8D58-C9B1F09A3CD1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DA76EF16-411C-4CE3-8D58-C9B1F09A3CD1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DA76EF16-411C-4CE3-8D58-C9B1F09A3CD1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{31FF8E74-BAA0-40C7-868A-B6FBC3D3C519}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{31FF8E74-BAA0-40C7-868A-B6FBC3D3C519}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{31FF8E74-BAA0-40C7-868A-B6FBC3D3C519}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{31FF8E74-BAA0-40C7-868A-B6FBC3D3C519}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

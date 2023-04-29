@@ -21,7 +21,6 @@ namespace CGTest
                 new Point(2,6),
                 new Point(6,7)
             };
-            //Поправить вывод, чтобы не по рёбрам
             MCH mCH = new MCH(list);
             mCH.Graham();
             mCH.Print();
