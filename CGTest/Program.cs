@@ -8,18 +8,18 @@ namespace CGTest
     {
         static void Main(string[] args)
         {
-            List<Point> list = new List<Point>
+            List<MyPoint> list = new List<MyPoint>
             {
-                new Point(1,1),
-                new Point(6,1),
-                new Point(4,2),
-                new Point(9,2),
-                new Point(3,4),
-                new Point(8,4),
-                new Point(5,5),
-                new Point(10,5),
-                new Point(2,6),
-                new Point(6,7)
+                new MyPoint(1,1),
+                new MyPoint(6,1),
+                new MyPoint(4,2),
+                new MyPoint(9,2),
+                new MyPoint(3,4),
+                new MyPoint(8,4),
+                new MyPoint(5,5),
+                new MyPoint(10,5),
+                new MyPoint(2,6),
+                new MyPoint(6,7)
             };
             MCH mCH = new MCH(list);
             mCH.Graham();

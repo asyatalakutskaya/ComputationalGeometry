@@ -9,7 +9,7 @@ namespace ComputationalGeometry
     /// <summary>
     /// Класс, реализующий точку на плоскости (т.е. координаты x и y).
     /// </summary>
-    public class Point
+    public class MyPoint
     {
         /// <summary>
         /// Координата по оси OX.
@@ -22,12 +22,12 @@ namespace ComputationalGeometry
         /// <summary>
         /// Инициализирует новый экземпляр класса Point, который является пустым и имеет начальные значения координат равными 0.
         /// </summary>
-        public Point()
+        public MyPoint()
         {
             X = 0;
             Y = 0;
         }
-        public Point(Point p)
+        public MyPoint(MyPoint p)
         {
             X = p.X;
             Y = p.Y;
@@ -37,7 +37,7 @@ namespace ComputationalGeometry
         /// </summary>
         /// <param name="x">Координата по оси OX.</param>
         /// <param name="y">Координата по оси OY.</param>
-        public Point(double x, double y)
+        public MyPoint(double x, double y)
         {
             X = x;
             Y = y;
@@ -60,7 +60,7 @@ namespace ComputationalGeometry
         /// <summary>
         /// Множество точек.
         /// </summary>
-        private List<Point> Points;
+        private List<MyPoint> Points;
         /// <summary>
         /// Минимальная выпуклая оболочка.
         /// </summary>
@@ -68,10 +68,10 @@ namespace ComputationalGeometry
 
         public MCH()
         {
-            Points = new List<Point>();
+            Points = new List<MyPoint>();
             N = 0;
         }
-        public MCH(List<Point> p)
+        public MCH(List<MyPoint> p)
         {
             Points = p;
             N = Points.Count;
@@ -166,7 +166,7 @@ namespace ComputationalGeometry
             quickHull(Points[leftPoint], Points[rightPoint], -1);            
         }
 
-        private void quickHull(Point p1, Point p2, int side)
+        private void quickHull(MyPoint p1, MyPoint p2, int side)
         {
             int ind = -1;
             double max_dist = 0;
@@ -203,7 +203,7 @@ namespace ComputationalGeometry
         /// <param name="p2"></param>
         /// <param name="p"></param>
         /// <returns></returns>
-        private double lineDist(Point p1, Point p2, Point p)
+        private double lineDist(MyPoint p1, MyPoint p2, MyPoint p)
         {
             return Math.Abs((p.Y - p1.Y) * (p2.X - p1.X) - (p2.Y - p1.Y) * (p.X - p1.X));
         }
@@ -215,7 +215,7 @@ namespace ComputationalGeometry
         /// <param name="B">Конец отрезка, относительно которого будем определять положение точки.</param>
         /// <param name="C">Точка, для которой определяется положение относительно отрезка AB.</param>
         /// <returns>Направление исходного поворота, если 1, то поворолт правый, если -1, то левый, если 0, то точки лежат на одной прямой.</returns>
-        private int Rotate(Point A, Point B, Point C)
+        private int Rotate(MyPoint A, MyPoint B, MyPoint C)
         {
             double rotate = (B.X - A.X) * (C.Y - B.Y) - (B.Y - A.Y) * (C.X - B.X);
             if (rotate < 0)
@@ -242,9 +242,9 @@ namespace ComputationalGeometry
         /// </summary>
         /// <param name="a"></param>
         /// <param name="b"></param>
-        private void Swap(List<Point> list, int a, int b)
+        private void Swap(List<MyPoint> list, int a, int b)
         {
-            Point temp = new Point(list[a]);
+            MyPoint temp = new MyPoint(list[a]);
             list[a] = list[b];
             list[b] = temp;
         }

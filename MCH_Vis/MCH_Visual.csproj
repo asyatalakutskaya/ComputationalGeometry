@@ -79,5 +79,11 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ComputationalGeometry\ComputationalGeometry.csproj">
+      <Project>{3f1a138c-8d41-40ed-8e89-52aa6df37ae4}</Project>
+      <Name>ComputationalGeometry</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
