@@ -15,6 +15,7 @@ namespace MCH_Vis
     {
         Graphics graphic;
         List<MyPoint> myPoints;
+        List<MyPoint> minimumCH;
         int center_X;
         int center_Y;
         public Form1()
@@ -33,13 +34,10 @@ namespace MCH_Vis
                 new MyPoint(5,5),
                 new MyPoint(10,5),
                 new MyPoint(2,6),
-                new MyPoint(6,7),
-                new MyPoint(6,-6),
-                new MyPoint(0,0),
-                new MyPoint(0,-5)
+                new MyPoint(6,7)
             };
             pointsList.Items.AddRange(myPoints.ToArray());
-            mchList.Items.Add(myPoints[0]);
+            
             center_X = (pictureBox1.Width / 2) - 9;//960
             center_Y = (pictureBox1.Height / 2) - 6;//494
         }
@@ -170,8 +168,10 @@ namespace MCH_Vis
                     GrahamTask();
                     break;
                 case (1):
+                    Jarvismarch();
                     break;
                 case (2):
+                    QuickHull();
                     break;
                 case (3):
                     break;
@@ -198,19 +198,19 @@ namespace MCH_Vis
                 int y = center_Y - (int)point.Y * 20  - 3;
                 return new MyPoint(x,y);
             }
-            if (point.X >= 0 && point.Y <= 0)
+            if (point.X >= 0 && point.Y < 0)
             {
                 int x = center_X + (int)point.X * 20 - 3;
                 int y = center_Y + (int)point.Y * (-20) - 3;
                 return new MyPoint(x, y);
             }
-            if (point.X >= 0 && point.Y >= 0)//доделать
+            if (point.X < 0 && point.Y < 0)
             {
                 int x = center_X + (int)point.X * 20 - 3;
-                int y = center_Y - (int)point.Y * 20 - 3;
+                int y = center_Y + (int)point.Y * (-20) - 3;
                 return new MyPoint(x, y);
             }
-            if (point.X >= 0 && point.Y >= 0)//доделать
+            if (point.X < 0 && point.Y >= 0)
             {
                 int x = center_X + (int)point.X * 20 - 3;
                 int y = center_Y - (int)point.Y * 20 - 3;
@@ -226,8 +226,56 @@ namespace MCH_Vis
         {
             PointDrawing();
             MCH mCH = new MCH(myPoints);
-            
             mCH.Graham();
+            minimumCH = new List<MyPoint>();
+            PrintMCHList(mCH.minCH);
+            PrintMCHGrafic();
+        }
+
+        private void Jarvismarch()
+        {
+            PointDrawing();
+            MCH mCH = new MCH(myPoints);
+            mCH.Jarvismarch();
+            minimumCH = new List<MyPoint>();
+            PrintMCHList(mCH.minCH);
+            PrintMCHGrafic();
+        }
+
+        private void QuickHull()
+        {
+            PointDrawing();
+            MCH mCH = new MCH(myPoints);
+            mCH.printHull();
+            minimumCH = new List<MyPoint>();
+            PrintMCHList(mCH.minCH);
+            PrintMCHGrafic();
+        }
+
+        private void PrintMCHList(List<int> minCH)
+        {
+            foreach (int index in minCH)
+                minimumCH.Add(myPoints[index]);
+            mchList.Items.AddRange(minimumCH.ToArray());
+        }
+
+        private void PrintMCHGrafic()
+        {
+            Pen pen = new Pen(Color.Red, 2f);
+            MyPoint point1 = CalculCoordinate(minimumCH[0]);
+            MyPoint point2 = CalculCoordinate(minimumCH[minimumCH.Count - 1]);
+            graphic.DrawLine(pen, (float)point1.X + 3, (float)point1.Y + 3, (float)point2.X + 3, (float)point2.Y + 3);
+            for(int i = 0; i<minimumCH.Count-1; ++i)
+            {
+                point1 = CalculCoordinate(minimumCH[i]);
+                point2 = CalculCoordinate(minimumCH[i+1]);
+                graphic.DrawLine(pen, (float)point1.X + 3, (float)point1.Y + 3, (float)point2.X + 3, (float)point2.Y + 3);
+            }
+        }
+
+        private void clearPoint_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

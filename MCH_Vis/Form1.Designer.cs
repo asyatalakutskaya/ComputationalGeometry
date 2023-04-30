@@ -106,6 +106,7 @@ namespace MCH_Vis
             this.clearPoint.TabIndex = 6;
             this.clearPoint.Text = "Очистить точки";
             this.clearPoint.UseVisualStyleBackColor = true;
+            this.clearPoint.Click += new System.EventHandler(this.clearPoint_Click);
             // 
             // delPoint
             // 

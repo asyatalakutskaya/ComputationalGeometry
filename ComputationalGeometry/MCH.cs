@@ -238,18 +238,6 @@ namespace ComputationalGeometry
         }
 
         /// <summary>
-        /// Обмен элементов местами.
-        /// </summary>
-        /// <param name="a"></param>
-        /// <param name="b"></param>
-        private void Swap(List<MyPoint> list, int a, int b)
-        {
-            MyPoint temp = new MyPoint(list[a]);
-            list[a] = list[b];
-            list[b] = temp;
-        }
-
-        /// <summary>
         /// Вывод минимальной выпуклой оболочки.
         /// </summary>
         public void Print()
