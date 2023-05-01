@@ -39,7 +39,7 @@ namespace MCH_Vis
             this.addPoint = new System.Windows.Forms.Button();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.mchList = new System.Windows.Forms.ListBox();
-            this.button1 = new System.Windows.Forms.Button();
+            this.clearGraphic = new System.Windows.Forms.Button();
             this.algolTask = new System.Windows.Forms.ComboBox();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
@@ -157,16 +157,17 @@ namespace MCH_Vis
             this.mchList.Size = new System.Drawing.Size(320, 376);
             this.mchList.TabIndex = 10;
             // 
-            // button1
+            // clearGraphic
             // 
-            this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.button1.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.125F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.button1.Location = new System.Drawing.Point(921, 92);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(264, 50);
-            this.button1.TabIndex = 11;
-            this.button1.Text = "Очистить график";
-            this.button1.UseVisualStyleBackColor = true;
+            this.clearGraphic.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.clearGraphic.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.125F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.clearGraphic.Location = new System.Drawing.Point(921, 92);
+            this.clearGraphic.Name = "clearGraphic";
+            this.clearGraphic.Size = new System.Drawing.Size(264, 50);
+            this.clearGraphic.TabIndex = 11;
+            this.clearGraphic.Text = "Очистить график";
+            this.clearGraphic.UseVisualStyleBackColor = true;
+            this.clearGraphic.Click += new System.EventHandler(this.clearGraphic_Click);
             // 
             // algolTask
             // 
@@ -189,7 +190,7 @@ namespace MCH_Vis
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(1210, 632);
             this.Controls.Add(this.algolTask);
-            this.Controls.Add(this.button1);
+            this.Controls.Add(this.clearGraphic);
             this.Controls.Add(this.mchList);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.delPoint);
@@ -223,7 +224,7 @@ namespace MCH_Vis
         private System.Windows.Forms.Button addPoint;
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.ListBox mchList;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button clearGraphic;
         private System.Windows.Forms.ComboBox algolTask;
     }
 }

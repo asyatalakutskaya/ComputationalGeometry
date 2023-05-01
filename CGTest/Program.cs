@@ -22,7 +22,7 @@ namespace CGTest
                 new MyPoint(6,7)
             };
             MCH mCH = new MCH(list);
-            mCH.Graham();
+            mCH.printHull();
             mCH.Print();
         }
     }

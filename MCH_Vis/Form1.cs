@@ -37,9 +37,9 @@ namespace MCH_Vis
                 new MyPoint(6,7)
             };
             pointsList.Items.AddRange(myPoints.ToArray());
-            
-            center_X = (pictureBox1.Width / 2) - 9;//960
-            center_Y = (pictureBox1.Height / 2) - 6;//494
+
+            center_X = (pictureBox1.Width / 2) - 9;
+            center_Y = (pictureBox1.Height / 2) - 6;
         }
 
         /// <summary>
@@ -53,7 +53,6 @@ namespace MCH_Vis
             Location = new Point((screen.Width - w) / 2, (screen.Height - h) / 2);
             Size = new Size(w, h);
         }
-
         /// <summary>
         /// Отрисовка координатной плоскости.
         /// </summary>
@@ -95,108 +94,29 @@ namespace MCH_Vis
             }
 
         }
-
-        private void Form1_Paint(object sender, PaintEventArgs e)
-        {
-                CoordinatePlane();
-        }
-
         /// <summary>
-        /// Добавление точки.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void addPoint_Click(object sender, EventArgs e)
-        {
-            //обработать повторение точек!!!!!!!!!!!!
-            try
-            {
-                if (xValue.Text == "" || yValue.Text == "")
-                {
-                    MessageBox.Show("Заполните значения координат X, Y.", "Предупреждение");
-                    return;
-                }
-                int x = Convert.ToInt32(xValue.Text);//18
-                int y = Convert.ToInt32(yValue.Text);//14
-                if (Math.Abs(x) > 16 || Math.Abs(y) > 14)
-                {
-                    MessageBox.Show("Выход за допустимое значение координат.", "Предупреждение");
-                    return;
-                }
-                MyPoint p = new MyPoint(x, y);
-                pointsList.Items.Add(p);
-                myPoints.Add(p);
-                clearXY();
-            }
-            catch(System.FormatException)
-            {
-                MessageBox.Show("Неверный ввод данных.", "Предупреждение");
-                clearXY();
-                return;
-            }
-        }
-
-        /// <summary>
-        /// Очистка полей для ввода координат.
-        /// </summary>
-        private void clearXY()
-        {
-            xValue.Text = "";
-            yValue.Text = "";
-        }
-
-        /// <summary>
-        /// Удаление точки.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void delPoint_Click(object sender, EventArgs e)
-        {
-            if (pointsList.SelectedItem == null)
-                return;
-            int delPoint = pointsList.SelectedIndex;
-            myPoints.RemoveAt(delPoint);
-            pointsList.Items.RemoveAt(delPoint);
-        }
-
-        private void algolTask_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            int index = algolTask.SelectedIndex;
-            switch(index)
-            {
-                case (0):
-                    GrahamTask();
-                    break;
-                case (1):
-                    Jarvismarch();
-                    break;
-                case (2):
-                    QuickHull();
-                    break;
-                case (3):
-                    break;
-            }
-        }
-
-        /// <summary>
-        /// отрисовка точек на графике.
+        /// Отрисовка точки на графике.
         /// </summary>
         private void PointDrawing()
         {
-            foreach(MyPoint point in myPoints)
+            foreach (MyPoint point in myPoints)
             {
-                MyPoint pointGrafics = CalculCoordinate(point);
-                graphic.FillEllipse(Brushes.Blue, (int)pointGrafics.X, (int)pointGrafics.Y, 6, 6);
+                MyPoint pointGrafics = CalculCoordinate(point);//Получили фактические координаты точки на отображаемой плоскости
+                graphic.FillEllipse(Brushes.Blue, (int)pointGrafics.X, (int)pointGrafics.Y, 6, 6);//Отобразили на графике
             }
         }
-
+        /// <summary>
+        /// Пересчёт координат точки на координаты отображаемой на форме плоскости.
+        /// </summary>
+        /// <param name="point">Точка, для которой нужно пересчитать координаты.</param>
+        /// <returns>Новые координаты точки.</returns>
         private MyPoint CalculCoordinate(MyPoint point)
         {
-            if(point.X>=0 && point.Y>=0)
+            if (point.X >= 0 && point.Y >= 0)
             {
                 int x = center_X + (int)point.X * 20 - 3;
-                int y = center_Y - (int)point.Y * 20  - 3;
-                return new MyPoint(x,y);
+                int y = center_Y - (int)point.Y * 20 - 3;
+                return new MyPoint(x, y);
             }
             if (point.X >= 0 && point.Y < 0)
             {
@@ -218,6 +138,97 @@ namespace MCH_Vis
             }
             return new MyPoint();
         }
+        /// <summary>
+        /// Очистка полей для ввода координат.
+        /// </summary>
+        private void clearXY()
+        {
+            xValue.Text = "";
+            yValue.Text = "";
+        }
+
+        private void Form1_Paint(object sender, PaintEventArgs e)
+        {
+            CoordinatePlane();
+        }
+        /// <summary>
+        /// Добавление точки.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void addPoint_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (xValue.Text == "" || yValue.Text == "")
+                {
+                    MessageBox.Show("Заполните значения координат X, Y.", "Предупреждение");
+                    return;
+                }
+                int x = Convert.ToInt32(xValue.Text);//18
+                int y = Convert.ToInt32(yValue.Text);//14
+                if (Math.Abs(x) > 16 || Math.Abs(y) > 14)
+                {
+                    MessageBox.Show("Выход за допустимое значение координат.", "Предупреждение");
+                    return;
+                }
+                MyPoint p = new MyPoint(x, y);
+                if(myPoints.Contains(p))
+                {
+                    MessageBox.Show("Точка с такими координатами уже есть в списке.", "Предупреждение");
+                    return;
+                }
+                pointsList.Items.Add(p);
+                myPoints.Add(p);
+                clearXY();
+            }
+            catch(System.FormatException)
+            {
+                MessageBox.Show("Неверный ввод данных.", "Предупреждение");
+                clearXY();
+                return;
+            }
+        }
+        /// <summary>
+        /// Удаление точки.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void delPoint_Click(object sender, EventArgs e)
+        {
+            if (pointsList.SelectedItem == null)
+            {
+                MessageBox.Show("Для удаления точки сначала выберите её в списке.", "Предупреждение");
+                return;
+            }
+            int delPoint = pointsList.SelectedIndex;
+            myPoints.RemoveAt(delPoint);
+            pointsList.Items.RemoveAt(delPoint);
+        }
+        private void algolTask_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if(myPoints.Count <=3)
+            {
+                MessageBox.Show("Недостаточно точек для построения минимальной выпуклой оболочки.", "Предупреждение");
+                return;
+            }
+            int index = algolTask.SelectedIndex;
+            switch(index)
+            {
+                case (0):
+                    GrahamTask();
+                    break;
+                case (1):
+                    Jarvismarch();
+                    break;
+                case (2):
+                    QuickHull();
+                    break;
+                case (3):
+                    break;
+            }
+        }
+        
 
         /// <summary>
         /// Построениее минимальной выпуклой оболочки при помощи алгоритма Грэхема.
@@ -232,6 +243,9 @@ namespace MCH_Vis
             PrintMCHGrafic();
         }
 
+        /// <summary>
+        /// Построениее минимальной выпуклой оболочки при помощи алгоритма Джарвиса.
+        /// </summary>
         private void Jarvismarch()
         {
             PointDrawing();
@@ -242,6 +256,9 @@ namespace MCH_Vis
             PrintMCHGrafic();
         }
 
+        /// <summary>
+        /// Построениее минимальной выпуклой оболочки при помощи алгоритма быстрой оболочки.
+        /// </summary>
         private void QuickHull()
         {
             PointDrawing();
@@ -252,13 +269,21 @@ namespace MCH_Vis
             PrintMCHGrafic();
         }
 
+        /// <summary>
+        /// Сохранение построенной МВО в переменной minimumCH и вывод точек, образующих МВО на форму.
+        /// </summary>
+        /// <param name="minCH"></param>
         private void PrintMCHList(List<int> minCH)
         {
             foreach (int index in minCH)
                 minimumCH.Add(myPoints[index]);
+            mchList.Items.Clear();
             mchList.Items.AddRange(minimumCH.ToArray());
         }
 
+        /// <summary>
+        /// Построение минимальной выпуклой оболочки на графике.
+        /// </summary>
         private void PrintMCHGrafic()
         {
             Pen pen = new Pen(Color.Red, 2f);
@@ -275,7 +300,24 @@ namespace MCH_Vis
 
         private void clearPoint_Click(object sender, EventArgs e)
         {
+            pointsList.Items.Clear();
+            mchList.Items.Clear();
+            if(myPoints!=null)
+                myPoints.Clear();
+            if(minimumCH!=null)
+                minimumCH.Clear();
+            ClearGrafic();
+        }
 
+        private void clearGraphic_Click(object sender, EventArgs e)
+        {
+            ClearGrafic();
+        }
+
+        private void ClearGrafic()
+        {
+            graphic.Clear(Color.White);
+            CoordinatePlane();
         }
     }
 }

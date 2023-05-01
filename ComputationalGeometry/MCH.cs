@@ -42,6 +42,23 @@ namespace ComputationalGeometry
             X = x;
             Y = y;
         }
+        public override bool Equals(object obj)
+        {
+            //Если не проверить на null объект other, то other.GetType() может выбросить //NullReferenceException.            
+            if (obj == null)
+                return false;
+            //Если ссылки указывают на один и тот же адрес, то их идентичность гарантирована.
+            if (object.ReferenceEquals(this, obj))
+                return true;
+            if (obj is MyPoint point) 
+                return X == point.X && Y == point.Y;
+            return false;
+        }
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
+        
         public override string ToString()
         {
             return $"({X};{Y})";
@@ -91,7 +108,7 @@ namespace ComputationalGeometry
             //Выбор стартовой точки(самая левая) и перестановка её номера в начало
             for (int i = 1; i < N; ++i)
                 if (Points[P[i]].X < Points[P[0]].X) //если P[i]-ая точка лежит левее P[0]-ой точки
-                    Swap(P, P[i], P[0]); //меняем местами номера этих точек 
+                    Swap(P, i, 0); //меняем местами номера этих точек 
             for (int i = 2; i < N; ++i) //сортировка вставкой
             {
                 int j = i;
@@ -163,7 +180,27 @@ namespace ComputationalGeometry
             minCH = new List<int>();
             //Рекурсивный поиск крайних точек
             quickHull(Points[leftPoint], Points[rightPoint], 1);
-            quickHull(Points[leftPoint], Points[rightPoint], -1);            
+            quickHull(Points[leftPoint], Points[rightPoint], -1);
+            SortMCH();
+        }
+
+        /// <summary>
+        /// Сортировка точек в порядке их "левоты" от стартовой точки.
+        /// </summary>
+        private void SortMCH()
+        {
+            for (int i = 1; i < minCH.Count; ++i)
+                if (Points[minCH[i]].X < Points[minCH[0]].X) //если P[i]-ая точка лежит левее P[0]-ой точки
+                    Swap(minCH, i, 0); //меняем местами номера этих точек 
+            for (int i = 2; i < minCH.Count; ++i) //сортировка вставкой
+            {
+                int j = i;
+                while (j > 1 && (Rotate(Points[minCH[0]], Points[minCH[j - 1]], Points[minCH[j]]) < 0))
+                {
+                    Swap(minCH, j, j - 1);
+                    j -= 1;
+                }
+            }
         }
 
         private void quickHull(MyPoint p1, MyPoint p2, int side)
